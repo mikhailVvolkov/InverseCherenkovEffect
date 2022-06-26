@@ -9,11 +9,9 @@ function [t0,theta,vx_final,vy_final,traj_x,traj_y] = pump_probe_scan(THz,el,sim
     f = waitbar(0,'1','Name','pump-probe scan');
     for i=1:sim.N_delay
         waitbar(i/sim.N_delay,f,['T = ',num2str(i*sim.dT*1e12,'%.1f'),' ps']);
-        %THz.t0 = sim.dT*(i-sim.N_delay/2); % [s]
         THz.t0 = 0;
         t0(i) = sim.dT*(i-sim.N_delay/2);
-        %el.x0 = 0;
-        el.x0 = t0(i)*el.v; %
+        el.x0 = t0(i)*el.v; 
         el.vy = 0;
         [traj_x(i,:),traj_y(i,:),vx,vy] = propagate_electron(THz,el,sim,setup);
         theta(i) = atan(vy(end)./vx(end));
@@ -23,6 +21,4 @@ function [t0,theta,vx_final,vy_final,traj_x,traj_y] = pump_probe_scan(THz,el,sim
     end
     disp(sim.dt);
     delete(f);
-    figure;plot(theta);title('theta deflection')
-    figure;plot(vy_final);title('final velocity perpendicular')
 end
